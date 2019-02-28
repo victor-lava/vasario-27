@@ -40,11 +40,12 @@
         echo "key: $key value: $value <br>";
       }
 
-      var_dump($arrayAssoc); // debuginimui, daugiau informacijos
+      // var_dump($arrayAssoc); // debuginimui, daugiau informacijos
 
       echo("sveiki, $vardas");
       echo 'sveiki,'.' '.$vardas; // sujungia eilutes, panasiai JS +
       echo 'sveiki, ' . $vardas;
+      echo "${vardas} Hello world";
       echo '4' . '5';
       echo '4' + '5';
 
