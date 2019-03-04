@@ -7,13 +7,13 @@ function isValidEmail(string $email) : bool {
 
   preg_match(   $regex,
                 $email,
-                $emailArray,
-                PREG_OFFSET_CAPTURE,
-                0);
+                $emailArray);
 
-  if(count($emailArray) === 0) {
-    $result = true;
-  }
+  print_R($emailArray);
+
+  // if(count($emailArray) === 0) {
+  //   $result = true;
+  // }
 
   // Ternary if/else
   return (count($emailArray) === 0) ? false : true;
@@ -23,7 +23,6 @@ function isValidEmail(string $email) : bool {
 
 
   // print_R($_GET);
-  // print_R($_POST);
   // if()
 
 if(count($_POST) > 0) { // Jei masyve yra daugiau nei 0 elementu, vadinasi forma buvo išsiųsta
