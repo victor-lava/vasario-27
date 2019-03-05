@@ -24,7 +24,7 @@ function isValidEmail(string $email) : bool {
 }
 
 function isValidPhone(string $phone) : bool {
-    $regex = '\+3{1}7{1}0{1}\s6{1,1}[0-9]{2}\s[0-9]{5}$/gM'; // Regex perziureti
+    $regex = '/^\+370\s6[0-9]{2}\s[0-9]{5}$/Di'; // Regex perziureti
     preg_match(   $regex,
                   $phone,
                   $phoneArray,
@@ -48,6 +48,7 @@ $errors = ['vardas' => ['message' => '',
           'tel' => ['message' => '',
                     'error' => false]];
 
+$sekme = 0;
 
 if(count($_POST) > 0) {
 
@@ -59,13 +60,14 @@ if(count($_POST) > 0) {
     //     echo "Vardas turi būti ne mažiau kaip 3 simboliai";
     // }
 
+
     if(empty($_POST['vardas'])) { // jei tuscias
       $errors['vardas']['message'] = "Iveskite varda.";
       $errors['vardas']['error'] = 'error';
     } elseif(strlen($_POST['vardas']) < 3) { // jei netuscias
       $errors['vardas']['message'] = "Vardas turi būti ne mažiau kaip 3 simboliai";
       $errors['vardas']['error'] = 'error';
-    }
+    } else { $sekme += 1; }
     // else {
     //   $errors['vardas'] = "Teisingas vardas.";
     // }
@@ -75,20 +77,20 @@ if(count($_POST) > 0) {
       $errors['pavarde']['message'] = "Iveskite pavardę.";
       $errors['pavarde']['error'] = 'error';
     }
-    if(!empty($_POST['pavarde']) && strlen($_POST['pavarde']) < 3) {
+    elseif(strlen($_POST['pavarde']) < 3) {
       $errors['pavarde']['message'] = "Pavardė turi būti ne mažiau kaip 3 simboliai";
       $errors['pavarde']['error'] = 'error';
-    }
+    } else { $sekme += 1; }
 
     if(!isValidEmail($_POST['email'])) {
       $errors['email']['message'] = "Įveskite teisingą el. pašto adresą.";
       $errors['email']['error'] = 'error';
-    }
+    } else { $sekme += 1; }
 
     if(!isValidPhone($_POST['tel'])) {
         $errors['tel']['message'] = "Įveskite teisingą telefono numerį";
         $errors['tel']['error'] = 'error';
-    }
+    } else { $sekme += 1; }
 
 }
 
@@ -115,6 +117,7 @@ echo "</pre>";
   <body>
 
       <br>
+      <?php if($sekme !== 4): ?>
       <form class="" action="valdo.php" method="post" novalidate>
 
           <!-- <p>pirmasis</p> -->
@@ -176,6 +179,9 @@ echo "</pre>";
           <br>
           <button type="submit">Send</button>
       </form>
+    <?php else: ?>
+       <p>Forma sėkmingai užpildyta.</p>
+     <?php endif; ?>
 
 
   </body>
