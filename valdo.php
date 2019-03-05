@@ -159,6 +159,7 @@ echo "</pre>";
                 class="<?=$errors['pavarde']['error'];?>"
               name="pavarde" value="">
               <p><?php echo $errors['pavarde']['message']; ?></p>
+              
           </div>
           <br>
           <div class="">
@@ -179,7 +180,7 @@ echo "</pre>";
           <br>
           <button type="submit">Send</button>
       </form>
-    <?php else: ?>
+    <?php else:  ?>
        <p>Forma sėkmingai užpildyta.</p>
      <?php endif; ?>
 
