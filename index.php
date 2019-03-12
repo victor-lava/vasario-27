@@ -9,13 +9,8 @@
 
 <?php
 
-  function skaiciuokGreiti( int $laikas, int $atstumas): int {
+  require_once "backend/functions.php";
 
-    $laikas = $laikas / 3600;
-    $atstumas = $atstumas / 1000;
-
-    return round($atstumas / $laikas, 0);
-  }
   // root, mysql
   // root, root
 
@@ -34,6 +29,7 @@
 
   // 3. apdoroja gautus duomenis ir sudeda į masyvą
   $automobiliai = $query->fetchAll(PDO::FETCH_ASSOC);
+
   echo "<pre>";
   print_R($automobiliai); // gauti vienam įrašui
   // print_R($query->fetchAll()); // o šitas skirtas, gauti daugiau nei vienam įrašui
@@ -79,5 +75,6 @@
         <!-- Pabaiga dinamiško turinio -->
       </tbody>
     </table>
+    <a href="create.php">Sukurti</a>
   </body>
 </html>
