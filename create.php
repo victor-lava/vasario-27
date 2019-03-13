@@ -2,65 +2,52 @@
 
   require_once "backend/functions.php";
 
-/* Visi laukai privalomi */
-/* Data: 2018-05-21 12:21:12 */
-/* Numeriai: KNH870 (ne daugiau 7 simboliu) */
-/* Atstumas: (ne daugiau 6 simboliu) */
-/* Laikas: (ne daugiau 6 simboliu) */
+  /* Visi laukai privalomi */
 
-var_dump($_POST);
-// echo isValidAtstumas((int) $_POST['atstumas']); // konvertuoja į int
-// echo (int) '1000s';
-  // echo isValidAtstumas('5'); // valid
-  // echo isValidAtstumas('1000'); // valid
-  // echo isValidAtstumas('1000s'); // invalid *
-  // echo isValidAtstumas('1000'); // valid
-  // echo isValidAtstumas('1000000'); // invalid
-  // echo isValidAtstumas('-5'); // invalid *
-  // echo isValidAtstumas('0'); // invalid *
+  /* Data: 2018-05-21 12:21:12 */
+  /* Numeriai: KNH870 (ne daugiau 7 simboliu) */
+  /* Atstumas: (ne daugiau 6 simboliu) */
+  /* Laikas: (ne daugiau 6 simboliu) */
 
+  // var_dump($_POST);
+
+
+  // printing(isValidData('2015-05-12 12:25:12')); // valid
+
+$data = null;
+$numeriai = null;
+$atstumas = null;
+$laikas = null;
 
 if(count($_POST) > 0) {
-  $user = 'homestead';
-  $pass = 'secret';
+  $db = connect();
 
-  $db = new PDO('mysql:host=localhost;dbname=automobiliai',
-                $user,
-                $pass,
-                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING)); // Sukuriamas prisijungimas prie duomenų bazės "automobiliai"
+  $data = $_POST['data'];
+  $numeriai = $_POST['numeriai'];
+  $atstumas = $_POST['atstumas'];
+  $laikas = $_POST['laikas'];
+
+  if(isValidData($data) === true && // *
+     isValidNumeriai($numeriai) === true && // *
+     isValidAtstumas($atstumas) === true && // *
+     isValidAtstumas($laikas) === true) // *
+    {
+     // Forma validuota sėkmingai
+
+       // Įkeliame duomenis
+       createGreitis($db, ['numeriai' => $numeriai,
+                           'data' => $data,
+                           'laikas' => $laikas,
+                           'atstumas' => $atstumas]);
 
 
-  // 1. Variantas
-  $query = $db->prepare("INSERT INTO greiciai (data,numeriai, atstumas, laikas) VALUES (:dataSQL, :numerisSQL, :atstumasSQL, :laikasSQL)");
+      // Nukreipsiu vartotoją iš create.php į index.php
 
-  // 2. Asociatyvinis masyvas
-  $query->execute([
-    'dataSQL' => $_POST['data'],
-    'numerisSQL' => $_POST['numeriai'],
-    'atstumasSQL' => $_POST['atstumas'],
-    'laikasSQL' => $_POST['laikas']
-  ]);
+      header('Location: index.php?numeris='.$numeriai); // nukreipimas į index.php (be laiko uždelsimo)
+      exit;
+      // header("refresh:20;url=index.php" ); //  nukreipimas į index.php su 5s. uždelsimu
+     }
 
-  // 2. Variantas
-  // $query = $db->prepare("INSERT INTO greiciai (data, numeriai, atstumas, laikas) VALUES (?, ?, ?, ?)");
-  //
-  // // 2. Indeksinis masyvas
-  // $query->execute([ $_POST['data'],
-  //                   $_POST['numeriai'],
-  //                   $_POST['atstumas'],
-  //                   $_POST['laikas']
-  //                 ]);
-
-  // 3. Variantas
-  // //
-  // $query = $db->prepare("INSERT INTO greiciai (data, numeriai, atstumas, laikas) VALUES (:dataSQL, :numerisSQL, :atstumasSQL, :laikasSQL)");
-  //
-  // $query->bindParam(':dataSQL', $_POST['data']);
-  // $query->bindParam(':numerisSQL', $_POST['numeriai']);
-  // $query->bindParam(':atstumasSQL', $_POST['atstumas']);
-  // $query->bindParam(':laikasSQL', $_POST['laikas']);
-  //
-  // $query->execute();
 }
 
 ?>
@@ -72,22 +59,35 @@ if(count($_POST) > 0) {
     <title></title>
   </head>
   <body>
+    <a href="index.php">Grįžti atgal</a>
     <form method="post">
       <div>
         <label for="data">Data ir laikas *</label>
-        <input type="text" id="data" name="data" value="">
+        <input type="text" id="data" name="data" placeholder="2015-05-12 12:21:12" value="">
+        <?php if($data !== null && isValidData($data) === false): ?>
+          <p>Įveskite teisingai datą.</p>
+        <?php endif; ?>
       </div>
       <div>
         <label for="numeriai">Valstybiniai numeriai *</label>
-        <input type="text" id="numeriai" name="numeriai" value="">
+        <input type="text" id="numeriai" name="numeriai" placeholder="KNH870" value="">
+        <?php if($numeriai !== null && isValidNumeriai($numeriai) === false): ?>
+          <p>Automobilio numeriai neturėtų būti ilgesni nei 7 simboliai arba neįvedėte numerių.</p>
+        <?php endif; ?>
       </div>
       <div>
         <label for="atstumas">Atstumas (m) *</label>
-        <input type="text" id="atstumas" name="atstumas" value="">
+        <input type="text" id="atstumas" name="atstumas" placeholder="1000" value="">
+        <?php if($atstumas !== null && isValidAtstumas($atstumas) === false): ?>
+          <p>Blogai suvestas atstumas.</p>
+        <?php endif; ?>
       </div>
       <div>
         <label for="laikas">Laikas (s) *</label>
-        <input type="text" id="laikas" name="laikas" value="">
+        <input type="text" id="laikas" name="laikas" placeholder="10" value="">
+        <?php if($laikas !== null && isValidAtstumas($laikas) === false): ?>
+          <p>Blogai suvestas laikas.</p>
+        <?php endif; ?>
       </div>
       <div>
         <!-- <input type="submit" value="Siųsti"> -->

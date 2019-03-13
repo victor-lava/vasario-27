@@ -8,33 +8,12 @@
 -->
 
 <?php
-
   require_once "backend/functions.php";
 
-  // root, mysql
-  // root, root
+  $db = connect();
+  $automobiliai = getAllGreiciai($db);
 
-  $user = 'homestead';
-  $pass = 'secret';
-
-  $db = new PDO('mysql:host=localhost;dbname=automobiliai',
-                $user,
-                $pass); // Sukuriamas prisijungimas prie duomenų bazės "automobiliai"
-
-  // 1. paruošiame užklausą
-  $query = $db->prepare('SELECT * FROM greiciai');
-
-  // 2. įvykdo užklausą, gražiną true/false
-  $query->execute();
-
-  // 3. apdoroja gautus duomenis ir sudeda į masyvą
-  $automobiliai = $query->fetchAll(PDO::FETCH_ASSOC);
-
-  echo "<pre>";
-  print_R($automobiliai); // gauti vienam įrašui
-  // print_R($query->fetchAll()); // o šitas skirtas, gauti daugiau nei vienam įrašui
-  // PDO::FETCH_ASSOC - gražina asociatyvinį masyvą
-  echo "</pre>";
+  // printing($automobiliai);
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +23,13 @@
     <title>CRUD</title>
   </head>
   <body>
-
+    <?php if(isset($_GET['numeris'])): ?>
+      <p>Įrašas sėkmingai sukurtas, automobilis <?=$_GET['numeris'];?> pridėtas!</p>
+      <?php
+          // header("refresh:3;url=index.php");
+          // exit; // jei norite apačioje esanti kodą, tai užkomentuoti tą exitą
+       ?>
+    <?php endif; ?>
     <table>
       <thead>
         <tr>
