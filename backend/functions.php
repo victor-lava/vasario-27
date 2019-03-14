@@ -17,6 +17,25 @@ function connect(): PDO {
   return $db;
 }
 
+
+function deleteGreitis(PDO $db, int $id): int {
+
+  $query = $db->prepare("DELETE FROM greiciai WHERE id = ?");
+  $query->execute([$id]);
+
+  // Row count grazina paveiktų įrašų skaičių
+  // if($query->rowCount() > 0) { // istrinta
+  //   $isDeleted = 1;
+  // } else { // neistrinta
+  //   $isDeleted = 0;
+  // }
+  return ($query->rowCount() > 0) ? 1 : 0; // Tenery if else
+}
+
+function updateGreitis(PDO $db, array $data) {
+
+}
+
 function createGreitis(PDO $db, array $data) {
 // function createGreitis(PDO $db, string $data,
 //                                 string $numeriai,
@@ -53,6 +72,17 @@ function createGreitis(PDO $db, array $data) {
   // $query->bindParam(':laikasSQL', $_POST['laikas']);
   //
   // $query->execute();
+}
+
+function getGreitis(PDO $db, int $id): array {
+    $query = $db->prepare('SELECT * FROM greiciai WHERE id = ?');
+    $query->execute([$id]);
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+
+    // $result = [];
+    // echo [''] == true;
+        // ([''] == true) patikriname ar $result yra ne tuscias array
+    return (is_array($result)) ? $result : [];
 }
 
 function getAllGreiciai(PDO $db): array  {

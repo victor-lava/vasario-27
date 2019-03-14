@@ -23,13 +23,16 @@
     <title>CRUD</title>
   </head>
   <body>
-    <?php if(isset($_GET['numeris'])): ?>
-      <p>Įrašas sėkmingai sukurtas, automobilis <?=$_GET['numeris'];?> pridėtas!</p>
-      <?php
-          // header("refresh:3;url=index.php");
-          // exit; // jei norite apačioje esanti kodą, tai užkomentuoti tą exitą
-       ?>
-    <?php endif; ?>
+
+    <?php if(isset($_GET['delete'])): ?>
+      <?php if($_GET['delete'] == 1): ?>
+        <p>Automobilis <?=$_GET['numeris'];?> sėkmingai ištrintas!</p>
+      <?php else: ?>
+        <p>Įrašo nepavyko ištrinti!</p>
+      <?php endif; ?>
+    <?php elseif(isset($_GET['success'])): ?>
+        <p>Įrašas sėkmingai sukurtas, automobilis <?=$_GET['numeris'];?> pridėtas!</p>
+    <?php endif;?>
     <table>
       <thead>
         <tr>
@@ -52,8 +55,8 @@
           <td><?=$automobilis['laikas'];?></td>
           <td><?=skaiciuokGreiti($automobilis['laikas'], $automobilis['atstumas']); ?></td>
           <td>
-            <a href="#">Taisyti</a>
-            <a href="#">Trinti</a>
+            <a href="update.php?id=<?=$automobilis['id'];?>">Taisyti</a>
+            <a href="delete.php?id=<?=$automobilis['id'];?>&numeris=<?=$automobilis['numeriai']?>">Trinti</a>
           </td>
         </tr>
         <?php endforeach; ?>
