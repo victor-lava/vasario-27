@@ -37,6 +37,7 @@ else { $redirect = true; } // bando nulaužti, dėl to nukreipiame į index.php
 if(count($_POST) > 0) {
   $db = connect();
 
+  $id = $_GET['id'];
   $data = $_POST['data'];
   $numeriai = $_POST['numeriai'];
   $atstumas = $_POST['atstumas'];
@@ -50,15 +51,17 @@ if(count($_POST) > 0) {
 
         // Forma validuota sėkmingai
        // Atnaujiname duomenis
-       updateGreitis($db,['numeriai' => $numeriai,
+       updateGreitis($db,[ 'id' => $id,
+                           'numeriai' => $numeriai,
                            'data' => $data,
                            'laikas' => $laikas,
                            'atstumas' => $atstumas]);
 
 
-      // Nukreipsiu vartotoją iš update.php į index.php
+      /* Įvykdot užklausą reikia perkrauti puslapį, jog vartotojas matytų pakeitimus. */
 
-      header('Location: index.php?success=1&numeris='.$numeriai); // nukreipimas į index.php (be laiko uždelsimo)
+      // Nukreipsiu vartotoją iš update.php į index.php
+      header('Location: index.php?id='.$id.'&update=1'.'&numeris='.$numeriai); // nukreipimas į index.php (be laiko uždelsimo)
       exit;
     } else { // Forma nevaliduota
 

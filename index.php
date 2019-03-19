@@ -11,7 +11,20 @@
   require_once "backend/functions.php";
 
   $db = connect();
-  $automobiliai = getAllGreiciai($db);
+  $pageNumber = 1;
+
+  if(isset($_GET['page']) && !empty($_GET['page'])) {
+    $pageNumber = $_GET['page'];
+  }
+  
+  $automobiliai = getAllGreiciai($db, $pageNumber);
+
+  // for ($i=0; $i < 10; $i++) {
+  //   createGreitis($db, ['data' => '2015-05-12 11:12:22',
+  //                       'numeriai' => 'AAA222',
+  //                       'atstumas' => 3000,
+  //                       'laikas' => 20]);
+  // }
 
   // printing($automobiliai);
 ?>
@@ -32,7 +45,10 @@
       <?php endif; ?>
     <?php elseif(isset($_GET['success'])): ?>
         <p>Įrašas sėkmingai sukurtas, automobilis <?=$_GET['numeris'];?> pridėtas!</p>
+    <?php elseif(isset($_GET['update'])): ?>
+      <p>Įrašas sėkmingai atnaujintas, automobilis <?=$_GET['numeris'];?>. </p>
     <?php endif;?>
+
     <table>
       <thead>
         <tr>

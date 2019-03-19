@@ -33,6 +33,26 @@ function deleteGreitis(PDO $db, int $id): int {
 }
 
 function updateGreitis(PDO $db, array $data) {
+    /*
+    UPDATE greiciai
+    SET atstumas = 2000
+    WHERE id = 20
+    */
+
+    $query = $db->prepare("UPDATE greiciai SET data = :dataSQL,
+                                               numeriai = :numerisSQL,
+                                               atstumas = :atstumasSQL,
+                                               laikas = :laikasSQL
+                                           WHERE id = :id");
+
+    // 2. Asociatyvinis masyvas
+    $query->execute([
+      'id' => $data['id'],
+      'dataSQL' => $data['data'],
+      'numerisSQL' => $data['numeriai'],
+      'atstumasSQL' => $data['atstumas'],
+      'laikasSQL' => $data['laikas']
+    ]);
 
 }
 
@@ -85,21 +105,38 @@ function getGreitis(PDO $db, int $id): array {
     return (is_array($result)) ? $result : [];
 }
 
-function getAllGreiciai(PDO $db): array  {
+
+function getAllGreiciai(PDO $db, int $page): array  {
 
   // taip nedaryti, nes kiekvieną kartą jungsimes prie DB
   // $db = connect();
 
   // 1. paruošiame užklausą
   $query = $db->prepare('SELECT * FROM greiciai
-                         ORDER BY id DESC'); // surikiuoja įrašus pagal id, mažėjimo tvarka
+                         ORDER BY id ASC
+                         LIMIT :limit OFFSET :offset'); // surikiuoja įrašus pagal id, mažėjimo tvarka
 
+  // Naudoti bindValue su limit ir offsetu, kadangi šito taisyklės turi įvykti pirma,
+  // nei įvyksta SELECT užklausa.
+  $limit = 4; // apsrendžia kiek 5ra67 rodome
+  // jei page = 1, o limitas yra 2, tai offsetas yra 0
+  // jei page = 2, o limitas yra 2, tai offsetas yra 2
+  // jei page = 3, o limitas yra 2, tai offsetas yra 4
+  // jei page = 4, o limitas yra 2, tai offsetas yra 6
+
+  $offset = ($page - 1) * $limit;
+
+  $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+  $query->bindValue(':offset', $offset, PDO::PARAM_INT);
   // 2. įvykdo užklausą, gražiną true/false
   $query->execute();
 
   // 3. apdoroja gautus duomenis ir sudeda į masyvą
   return $query->fetchAll(PDO::FETCH_ASSOC);
 }
+/* Galima greiti suskaiciuoti per SQL uzklausa */
+/* Pvz. SELECT data, numeriai, ROUND(atstumas/laikas*3.6, 2) AS greitis FROM greiciai */
+/* ROUND funkcija suapvalina rezultata, AS Greitis sukuria naują stulpelį užklausos įgyvendinimo metu */
 
 function skaiciuokGreiti( int $laikas, int $atstumas): int {
 
