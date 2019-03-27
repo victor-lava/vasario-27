@@ -10,6 +10,10 @@ class Vehicle {
   private $ownerFullName;
   private $vin;
 
+  public function __construct(array $settings) {
+    $this->setSettings($settings);
+  }
+
   public function setSettings(array $settings) {
     if(isset($settings['color'])) {
       $this->setColor($settings['color']);

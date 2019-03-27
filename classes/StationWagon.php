@@ -4,12 +4,11 @@ class StationWagon extends Car {
 
   public $volume; // turis
 
+  public function __construct(array $settings) {
 
-    public function __construct(array $settings) {
+    $this->setSettings($settings);
 
-      $this->setSettings($settings);
-      
-    }
+  }
 
 
 }

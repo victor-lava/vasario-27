@@ -6,13 +6,10 @@ class Motorcycle extends Vehicle {
   // public $rollbars = true;
 
   public function __construct(array $settings) {
-
     $settings['fuelType'] = 'gasoline';
     $settings['drivetrain'] = 'front';
 
-    $this->setSettings($settings);
-    // $this->setRollbars(true);
-
+    parent::__construct($settings); // Iškviečia Vehicle klasės konstruktorių
   }
 
 }
