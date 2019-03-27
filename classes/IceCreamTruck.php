@@ -1,9 +1,8 @@
 <?php
 
-class Jeep extends Car {
+class IceCreamTruck extends Truck {
 
-  public $suvType; // miesto... bekeles
-
+  public $iceScreamType;
 
   public function __construct(array $settings) {
 
